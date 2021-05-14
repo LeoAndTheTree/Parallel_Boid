@@ -1,0 +1,6 @@
+*.o
+boid
+boid_cuda
+boid_inf
+boid_mpi
+*.txt
