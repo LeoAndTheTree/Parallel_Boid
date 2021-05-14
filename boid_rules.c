@@ -94,3 +94,11 @@ void setup(float *oldLocation, float *newLocation, float *oldVelocity, float *ne
         newVelocity[i * 2 + 1] = 0;
     }
 }
+
+bool compareResults(float *A, float *B, int count){
+    for (int i = 0; i < count; i++)
+        if (A[i] - B[i] > 0.000001 || B[i] - A[i] > 0.000001){
+            return false;
+        }
+    return true;
+}

@@ -255,15 +255,6 @@ void cleanup() {
     cudaFree(cudaData.newVelocity);
 }
 
-bool compareResults(float *A, float *B, int count){
-    for (int i = 0; i < count; i++)
-        if (A[i] - B[i] > 0.000001 || B[i] - A[i] > 0.000001){
-            printf("mismatch found at %d, A: %f, B: %f\n", i, A[i], B[i]);
-            return false;
-        }
-    return true;
-}
-
 int main(int argc, char **argv) {
     // NCORES = atoi(argv[2]);
     int iterations = 1;
@@ -289,10 +280,6 @@ int main(int argc, char **argv) {
     average_ms /= iterations;
     double cuda_time = average_ms;
     printf("Total time with cuda: %.3lf ms\n", average_ms);
-    float *cudaLocation = (float *) malloc(sizeof(float) * 2 * SIZE);
-    float *cudaVelocity = (float *) malloc(sizeof(float) * 2 * SIZE);
-    cudaMemcpy(cudaLocation, cudaData.newLocation, sizeof(float) * 2 * SIZE, cudaMemcpyDeviceToHost);
-    cudaMemcpy(cudaVelocity, cudaData.newVelocity, sizeof(float) * 2 * SIZE, cudaMemcpyDeviceToHost);
     cleanup();
 
     oldLocation = (float *)malloc(sizeof(float) * 2 * SIZE);
@@ -312,8 +299,6 @@ int main(int argc, char **argv) {
     average_ms /= iterations;
     double normal_time = average_ms;
     printf("Total time linear: %.3lf ms\n", average_ms);
-    printf("Result location match: %d\n", compareResults(cudaLocation, newLocation, SIZE * 2));
-    printf("Result velocity match: %d\n", compareResults(cudaVelocity, newVelocity, SIZE * 2));
     printf("Speedup: %0.3f\n", normal_time / cuda_time);
     cleanup();
 }
